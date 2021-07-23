@@ -1,0 +1,80 @@
+[tool.poetry]
+name = "golocity"
+version = "0.0.1"
+description = "An easy to use execution manager for the Golem Network"
+authors = ["davidstyers <david@styers.dev>"]
+
+license = "LGPL-3.0-or-later"
+
+readme = "README.md"
+
+homepage = ""
+repository = "https://github.com/davidstyers/golocity"
+documentation = ""
+
+keywords = ["golem", "cryptocurrency", "computation", "distributed"]
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Topic :: System :: Distributed Computing",
+]
+
+[tool.poetry.scripts]
+golocity = "golocity.main:golocity"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+yapapi = "^0.6.1"
+typer = {extras = ["all"], version = "^0.3.2"}
+gvmkit-build = "^0.2.6"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.4"
+black = "^21.6b0"
+flake8 = "^3.9.2"
+flake8-isort = "^4.0.0"
+flake8-black = "^0.2.1"
+pre-commit = "^2.13.0"
+pytest-cov = "^2.12.1"
+pytest-emoji = "^0.2.0"
+mypy = "^0.910"
+pytest-mock = "^3.6.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+src_paths = ["golocity", "tests"]
+profile = "black"
+indent = 4
+combine_star = true
+combine_as_imports = true
+lines_after_imports = 2
+known_pytest = ["pytest"]
+known_first_party = ["golocity"]
+sections = ["FUTURE", "STDLIB", "PYTEST", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+
+[tool.black]
+line-length = 88
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | tests/.*/setup.py
+)/
+'''
+
+[tool.pytest.ini_options]
+addopts = "--emoji"
+testpaths = ["tests/"]
