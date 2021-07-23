@@ -1,6 +1,7 @@
 import pkg_resources
 import typer
 
+
 TMP_DOCKERFILE: str = "Dockerfile.golocity"
 VERSION: str = pkg_resources.get_distribution("golocity").version
 CONFIGURATION_FILE: str = "golocity.ini"

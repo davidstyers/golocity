@@ -14,9 +14,9 @@ def init_config(project_path: Path) -> configparser.ConfigParser:
         config.read(file_path)
     else:
         config["DEFAULT"] = {}
-        config["DEFAULT"]["image_id"] = ''
-        config["DEFAULT"]["command"] = ''
-        config["DEFAULT"]["gvmkit_hash"] = ''
+        config["DEFAULT"]["image_id"] = ""
+        config["DEFAULT"]["command"] = ""
+        config["DEFAULT"]["gvmkit_hash"] = ""
     return config
 
 
@@ -34,7 +34,7 @@ def init_logging(level: str) -> None:
 
 def log(level: str, msg: str) -> None:
     logging.getLogger(__name__)
-    colors: dict = {
+    colors: dict[str, str] = {
         "DEBUG": typer.colors.CYAN,
         "INFO": typer.colors.GREEN,
         "WARNING": typer.colors.YELLOW,

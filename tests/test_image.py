@@ -2,11 +2,13 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Optional
 
-import typer
 import pytest
 
-from golocity.main import create_golocity
+import typer
+
 from golocity.image import ImageClient
+from golocity.main import create_golocity
+
 
 app: typer.Typer = create_golocity()
 
@@ -54,14 +56,10 @@ def project_directory(request) -> Path:
 @pytest.mark.parametrize("project_directory", ["CMD", "ENTRYPOINT"], indirect=True)
 def test_clean_cmd_dockerfile(project_directory: Path, mocker) -> None:
     dockerfile = Path(project_directory).joinpath("Dockerfile")
-    mocker.patch(
-        'golocity.image.ImageClient.setup_docker',
-        return_value=None
-    )
+    mocker.patch("golocity.image.ImageClient.setup_docker", return_value=None)
     image = ImageClient(
-        project_path=project_directory,
-        dockerfile_path=dockerfile,
-        image_id=None)
+        project_path=project_directory, dockerfile_path=dockerfile, image_id=None
+    )
     assert image.command == ["python", "./hello-world.py"]
 
 
@@ -69,52 +67,33 @@ def test_clean_cmd_dockerfile(project_directory: Path, mocker) -> None:
 def test_build_image(project_directory: Path, mocker) -> None:
     dockerfile = Path(project_directory).joinpath("Dockerfile")
     test_class = TestImage(img_id="test")
+    mocker.patch("golocity.image.ImageClient.setup_docker", return_value=None)
     mocker.patch(
-        'golocity.image.ImageClient.setup_docker',
-        return_value=None
-    )
-    mocker.patch(
-        'golocity.image.ImageClient._build',
-        return_value=(test_class, "This is a test")
+        "golocity.image.ImageClient._build", return_value=(test_class, "This is a test")
     )
     image = ImageClient(
-        project_path=project_directory,
-        dockerfile_path=dockerfile,
-        image_id=None)
+        project_path=project_directory, dockerfile_path=dockerfile, image_id=None
+    )
     assert image.build_image() == (test_class, "This is a test")
 
 
 @pytest.mark.parametrize("project_directory", ["ENTRYPOINT"], indirect=True)
 def test_get_image(project_directory: Path, mocker) -> None:
     dockerfile = Path(project_directory).joinpath("Dockerfile")
-    mocker.patch(
-        'golocity.image.ImageClient.setup_docker',
-        return_value=None
-    )
-    mocker.patch(
-        'golocity.image.ImageClient._get',
-        return_value=None
-    )
+    mocker.patch("golocity.image.ImageClient.setup_docker", return_value=None)
+    mocker.patch("golocity.image.ImageClient._get", return_value=None)
     image = ImageClient(
-        project_path=project_directory,
-        dockerfile_path=dockerfile,
-        image_id=None)
+        project_path=project_directory, dockerfile_path=dockerfile, image_id=None
+    )
     assert image.get_image() is None
 
 
 @pytest.mark.parametrize("project_directory", ["ENTRYPOINT"], indirect=True)
 def test_build_gvmkit(project_directory: Path, mocker) -> None:
     dockerfile = Path(project_directory).joinpath("Dockerfile")
-    mocker.patch(
-        'golocity.image.ImageClient.setup_docker',
-        return_value=None
-    )
-    mocker.patch(
-        'golocity.image.ImageClient._run_process',
-        return_value=None
-    )
+    mocker.patch("golocity.image.ImageClient.setup_docker", return_value=None)
+    mocker.patch("golocity.image.ImageClient._run_process", return_value=None)
     image = ImageClient(
-        project_path=project_directory,
-        dockerfile_path=dockerfile,
-        image_id=None)
+        project_path=project_directory, dockerfile_path=dockerfile, image_id=None
+    )
     assert image.build_gvmkit() == ""

@@ -42,11 +42,11 @@ To do so, use the ``build`` command:
 
     golocity build /path/to/your/project
 
-This will build the requisite images as well as create a ``.golocity`` 
+This will build the requisite images as well as create a ``.golocity``
 directory in your projects directory. This directory holds configuration files needed
 by Golocity as well as logs.
 
-The build command also pushes the Golem virtual machine image to the Network's public 
+The build command also pushes the Golem virtual machine image to the Network's public
 repository. To preform a dry-run, append the ``--info`` flag to the command.
 
 Under the hood, Golocity parses your Dockerfile for ``ENTRYPOINT`` and ``CMD`` commands.
@@ -57,7 +57,7 @@ worry, Golocity will not alter your project files, it only operates on temporary
 Deploying to the Network
 ------------------------
 
-Once you have successfully built and pushed the images, you are ready to deploy your 
+Once you have successfully built and pushed the images, you are ready to deploy your
 project on the Network! First, make sure you have the ``yagna`` daemon running on your
 machine, for more information, refer to the `Golem Handbook.
 <https://handbook.golem.network/requestor-tutorials/flash-tutorial-of-requestor-development/run-first-task-on-golem>`_

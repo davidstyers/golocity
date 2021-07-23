@@ -7,19 +7,19 @@ from golocity.helpers import init_config, init_logging, log
 
 
 def main(
-        path: Path = typer.Option(
-            default=Path("."),
-            help="The path to the project.",
-        ),
-        level: str = typer.Option(
-            default="DEBUG",
-            help="The level to set the logger.",
-        ),
-        art: bool = typer.Option(
-            default=True,
-            help="Whether to display terminal art or not.",
-            is_flag=True,
-        ),
+    path: Path = typer.Option(
+        default=Path("."),
+        help="The path to the project.",
+    ),
+    level: str = typer.Option(
+        default="DEBUG",
+        help="The level to set the logger.",
+    ),
+    art: bool = typer.Option(
+        default=True,
+        help="Whether to display terminal art or not.",
+        is_flag=True,
+    ),
 ) -> None:
     """
     Main entrypoint for Golocity
@@ -46,13 +46,15 @@ def create_golocity() -> typer.Typer:
 
     app.command(
         help="Prepares and builds image, saves pertinent information"
-             "in the project configuration file.")(build.build)
+        "in the project configuration file."
+    )(build.build)
 
     app.command(help="Deploys project to the Golem Network.")(deploy.deploy)
 
     app.callback(
-        help="Golocity version " +
-             typer.style("{}".format(VERSION), fg=typer.colors.MAGENTA))(main)
+        help="Golocity version "
+        + typer.style("{}".format(VERSION), fg=typer.colors.MAGENTA)
+    )(main)
 
     return app
 

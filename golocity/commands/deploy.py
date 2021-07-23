@@ -8,8 +8,8 @@ import typer
 from yapapi.log import enable_default_logger
 
 from golocity import CONF
-from golocity.yagna import YagnaClient
 from golocity.helpers import log
+from golocity.yagna import YagnaClient
 
 
 def deploy(
