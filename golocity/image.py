@@ -124,9 +124,9 @@ class ImageClient:
         )
         for stdout_line in process.stdout:  # type: ignore[union-attr]
             dl: str = stdout_line.decode("utf-8")
+            log("DEBUG", "gvmkit-build: {}".format(" ".join(dl.split())))
             if "success." in dl.split(" "):
                 return dl.split(" ")[3]
-            log("DEBUG", "gvmkit-build: {}".format(" ".join(dl.split())))
         return None
 
     def build_gvmkit(
@@ -143,7 +143,6 @@ class ImageClient:
         # Currently, gvmkit_build is optimised for command line use only.
         # While this is suboptimal, it is the best way possible for now.
         log("INFO", "Building Golem virtual machine from image {}".format(self.id))
-        gvmkit_hash: str = ""
         args: list[str] = [
             "python",
             "-m",
@@ -152,15 +151,15 @@ class ImageClient:
         ]  # type: ignore[list-item]
         if info:
             args.append("--info")
-
         try:
-            self._run_process(args)
-            # gvmkit_build has a bug where it won't push an image unless already built.
-            if push:
-                args.append("--push")
+            if not push:
+                return self._run_process(args)
+            else:
+                # gvmkit_build will not push an image after building,
+                # we have to run the command again.
                 self._run_process(args)
-                return gvmkit_hash
+                args.append("--push")
+                return self._run_process(args)
         except Exception as e:
             log("CRITICAL", str(e))
             sys.exit(1)
-        return None

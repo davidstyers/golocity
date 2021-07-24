@@ -5,7 +5,7 @@ Golocity
 Summary
 =======
 
-    Golocity is a young project and while there is extensive testing,
+    Golocity is a young project and while there is testing,
     there still may be bugs. Be sure and test thoroughly prior to use in a production environment.
 
 **Golocity** is an easy to use CLI execution manager for the Golem Network.
