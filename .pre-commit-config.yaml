@@ -13,7 +13,7 @@ repos:
     rev: v0.910
     hooks:
       - id: mypy
-        args: [golocity]
+        args: [--install-types, --non-interactive, golocity]
         pass_filenames: false # https://github.com/pre-commit/mirrors-mypy/issues/5
 
   - repo: https://github.com/pycqa/isort

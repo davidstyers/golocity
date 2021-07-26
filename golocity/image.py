@@ -147,8 +147,8 @@ class ImageClient:
             "python",
             "-m",
             "gvmkit_build",
-            self.id,
-        ]  # type: ignore[list-item]
+            self.id,  # type: ignore[list-item]
+        ]
         if info:
             args.append("--info")
         try:
@@ -159,6 +159,7 @@ class ImageClient:
                 # we have to run the command again.
                 self._run_process(args)
                 args.append("--push")
+                log("INFO", "Pushing image to Golem repository.")
                 return self._run_process(args)
         except Exception as e:
             log("CRITICAL", str(e))
