@@ -1,33 +1,103 @@
+version: 2
+
 jobs:
-  build:
-    executor: python/default
+
+  # Building and testing the project
+  # Useful when a PR is open, for example
+  build-and-test:
+    # Our environment, Python 3.9.6
+    docker:
+      - image: cimg/python:3.9.6
+
+    # The steps for our build-and-test
     steps:
-      - add_ssh_keys
+      # Get the code
       - checkout
-      - python/install-packages:
-          pkg-manager: poetry
+
+      # Cache can be tricky at first, but this means
+      # Please, restore my cache (what is actually on the cache will be defined later)
+      # if the text key `deps-{{ checksum "poetry.lock" }}` changes (and it WILL change everytime poetry.lock is updated since we rely on its checksum)
+      # and poetry.lock is updated every time we add a new dependency to our project
+      - restore_cache:
+          keys:
+            - deps-{{ checksum "poetry.lock" }}
+
+      # Configure Poetry
       - run:
+          name: Configure Poetry
           command: |
-            make check_release
+            poetry config pypi-token.golocity "${PYPI_API_TOKEN}"
+
+      # Let's install the dependencies
       - run:
+          name: Install Dependencies
           command: |
-            poetry config pypi-token.pypi $PYPI_API_TOKEN
+            poetry install
+
+      # Save's the specified path as a cache. This is the path Poetry uses to install the dependencies
+      # So if you don't install anything new, this folder won't change and the cache will be effective
+      - save_cache:
+          key: deps-{{ checksum "poetry.lock" }}
+          paths:
+            - /home/circleci/.cache/pypoetry/virtualenvs
+
+      # Another step, run flake8
       - run:
+          name: Run flake8
           command: |
-            poetry build
-          name: Build package
+            poetry run flake8 .
+
+      # Another step, run black
       - run:
+          name: Run black
           command: |
-            poetry publish
-          name: Build package
-orbs:
-  codecov: codecov/codecov@1.1.3
-  python: circleci/python@1.0.0
-version: 2.1
+            poetry run black .
+
+      # Another step, run mypy
+      - run:
+          name: Run mypy
+          command: |
+            poetry run mypy golocity --install-types --non-interactive
+
+  # This is the definition of another job, the one we use to publish the package to PyPI
+  deployment:
+
+    # Same environment
+    docker:
+      - image: cimg/python:3.9.6
+    steps:
+
+      # Gets the code
+      - checkout
+
+      # Use `poetry publish` to Publish the package using username and password from CircleCI environment variables
+      # Which can be configured inside CircleCI's interface
+      - run:
+          name: Push to PyPI
+          command: |
+            poetry publish --build --no-interaction
+# In the workflows section, we specify when we want to run the jobs defined
 workflows:
-  main:
+  version: 2
+
+  # The deployment workflow publishes the package
+  deployment-workflow:
     jobs:
-      - build:
+
+      # Runs build and test, but now just on Git tags (created from a GitHub release)
+      - build-and-test:
           filters:
             tags:
-              only: /.*/
+              only: /v[0-9]+(\.[0-9]+)*/
+            branches:
+              ignore: /.*/
+
+      # Runs the deployment job, just with the tags as well
+      - deployment:
+          requires:
+            - build-and-test
+          filters:
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*/
+            branches:
+              ignore: /.*/
