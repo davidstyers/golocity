@@ -1,0 +1,58 @@
+name: Backend Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    name: Test on ${{ matrix.python-version }}
+
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.9']
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: x64
+
+      - run: pip install poetry
+      - name: Install dependencies
+        run: poetry install
+
+      - name: pytest
+        run: poetry run py.test --cov-report xml --cov=. --cov-fail-under 50 --showlocals -vv
+      - uses: codecov/codecov-action@v1
+        if: ${{ always() }}
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          verbose: true
+
+  flake8:
+    runs-on: ubuntu-latest
+    container: python:3.9
+
+    steps:
+      - uses: actions/checkout@v2
+      - run: pip install poetry
+      - name: Install dependencies
+        run: poetry install
+      - run: poetry run flake8
+
+  mypy:
+    runs-on: ubuntu-latest
+    container: python:3.9
+
+    steps:
+      - uses: actions/checkout@v2
+      - run: pip install poetry
+      - name: Install dependencies
+        run: poetry install
+      - run: poetry run mypy golocity

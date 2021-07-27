@@ -1,0 +1,38 @@
+name: Build Docs
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    name: build docs on python 3.9
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+          architecture: x64
+
+      - run: pip install poetry
+      - name: Install dependencies
+        run: poetry install
+
+      - name: build-docs
+        run: cd docs && poetry run python make_docs.py --output-file=pages
+
+      - name: set up cloud sdk
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+          export_default_credentials: true
+
+      - id: upload-file
+        uses: google-github-actions/upload-cloud-storage@main
+        with:
+          path: docs/pages.json
+          destination: avoco-dev/
