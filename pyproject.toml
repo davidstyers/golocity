@@ -24,7 +24,7 @@ classifiers = [
 golocity = "golocity.main:golocity"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 yapapi = "^0.6.1"
 typer = {extras = ["all"], version = "^0.3.2"}
 gvmkit-build = "^0.2.6"

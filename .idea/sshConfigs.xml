@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="SshConfigs">
-    <configs>
-      <sshConfig host="dev.davidstyers.com" id="a0553424-6e02-45a0-9f05-e84be64c2643" keyPath="$USER_HOME$/.ssh/id_rsa" port="1094" nameFormat="DESCRIPTIVE" username="dstyers" />
-    </configs>
-  </component>
-</project>
