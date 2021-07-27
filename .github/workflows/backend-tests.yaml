@@ -55,4 +55,4 @@ jobs:
       - run: pip install poetry
       - name: Install dependencies
         run: poetry install
-      - run: poetry run mypy golocity --install-types
+      - run: poetry run mypy golocity --install-types --non-interactive
