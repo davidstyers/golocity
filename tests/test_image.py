@@ -96,4 +96,4 @@ def test_build_gvmkit(project_directory: Path, mocker) -> None:
     image = ImageClient(
         project_path=project_directory, dockerfile_path=dockerfile, image_id=None
     )
-    assert image.build_gvmkit() == ""
+    assert image.build_gvmkit() is None
