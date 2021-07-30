@@ -28,7 +28,7 @@ jobs:
 
       - name: pytest
         run: poetry run py.test --cov-report xml --cov=. --cov-fail-under 50 --showlocals -vv
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v2
         if: ${{ always() }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
